@@ -1,5 +1,5 @@
 [package]
-name = "roguelike"
+name = "yarl"
 version = "0.1.0"
 authors = ["Niklas Mennig <niloe99@outlook.de>"]
 edition = "2018"
@@ -8,5 +8,5 @@ edition = "2018"
 
 [dependencies]
 rltk = "0.8.1"
-specs = "0.16.1"
+specs = "0.17.0"
 specs-derive = "0.4.1"

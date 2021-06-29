@@ -31,6 +31,17 @@ fn handle_input(gs: &mut State, ctx: &mut Rltk) {
             rltk::VirtualKeyCode::A => try_move_player(-1, 0, ecs),
             rltk::VirtualKeyCode::S => try_move_player(0, 1, ecs),
             rltk::VirtualKeyCode::D => try_move_player(1, 0, ecs),
+
+            rltk::VirtualKeyCode::Numpad1 => try_move_player(-1, 1, ecs),
+            rltk::VirtualKeyCode::Numpad2 => try_move_player(0, 1, ecs),
+            rltk::VirtualKeyCode::Numpad3 => try_move_player(1, 1, ecs),
+            rltk::VirtualKeyCode::Numpad4 => try_move_player(-1, 0, ecs),
+            rltk::VirtualKeyCode::Numpad5 => try_move_player(0, 0, ecs),
+            rltk::VirtualKeyCode::Numpad6 => try_move_player(1, 0, ecs),
+            rltk::VirtualKeyCode::Numpad7 => try_move_player(-1, -1, ecs),
+            rltk::VirtualKeyCode::Numpad8 => try_move_player(0, -1, ecs),
+            rltk::VirtualKeyCode::Numpad9 => try_move_player(1, -1, ecs),
+
             _=>{}
         }
     }
