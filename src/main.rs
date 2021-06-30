@@ -1,9 +1,12 @@
-use components::Position;
+use map::Map;
 use rltk::{Rltk, GameState};
 use specs::prelude::*;
 
 mod components;
 mod systems;
+
+mod map;
+mod generators;
 
 
 pub struct State {
@@ -18,6 +21,7 @@ impl GameState for State {
 
         ctx.print(1,1,"Test");
 
+        systems::draw_map(self, ctx);
         systems::draw_drawables(self, ctx);
     }
 }
@@ -50,10 +54,17 @@ fn handle_input(gs: &mut State, ctx: &mut Rltk) {
 fn try_move_player (dx: i32, dy: i32, ecs: &mut World) {
     let mut positions = ecs.write_storage::<components::Position>();
     let mut players = ecs.write_storage::<components::Player>(); 
+    let mut map = ecs.read_resource::<map::StaticMap>();
 
     for (pl, pos) in (&mut players, &mut positions).join() {
-        pos.x += dx;
-        pos.y += dy;
+        let end_x = pos.x + dx;
+        let end_y = pos.y + dy;
+        
+        match map.get_tile(end_x as usize, end_y as usize) {
+            map::MapTileType::WALL => (),
+            map::MapTileType::EMPTY => {pos.x = end_x; pos.y = end_y;}            
+        };
+
     }
 }
 

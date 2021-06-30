@@ -1,5 +1,3 @@
-use core::f32;
-
 use specs::prelude::*;
 use specs_derive::Component;
 
