@@ -21,8 +21,11 @@ impl GameState for State {
 
         ctx.print(1,1,"Test");
 
+        systems::calculate_visibility(self);
         systems::draw_map(self, ctx);
         systems::draw_drawables(self, ctx);
+
+        self.ecs.maintain();
     }
 }
 
@@ -82,6 +85,7 @@ fn main() -> rltk::BError {
     gs.ecs.register::<components::Position>();
     gs.ecs.register::<components::Drawable>();
     gs.ecs.register::<components::Player>();
+    gs.ecs.register::<components::Viewshed>();
 
     systems::startup(&mut gs);
 
