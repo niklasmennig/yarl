@@ -1,40 +1,42 @@
+use std::usize;
+
 use rltk::FontCharType;
 
-#[derive(Clone, PartialEq)]
+#[derive(Clone, PartialEq, Copy)]
 pub enum MapTileType {
     EMPTY,
     WALL
 }
 
-pub fn map_glyph(t : MapTileType) -> Option<FontCharType> {
+pub fn map_glyph(t : MapTileType) -> FontCharType {
     match t {
-        MapTileType::EMPTY => None,
-        MapTileType::WALL => Some(rltk::to_cp437('#'))
+        MapTileType::EMPTY => rltk::to_cp437('.'),
+        MapTileType::WALL => rltk::to_cp437('#')
     }
 }
 
 pub trait Map {
-    fn get_tile(&self, x: usize, y: usize) -> MapTileType;
-    fn set_tile(&mut self, x : usize, y : usize, v : MapTileType);
-    fn get_size(&self) -> (usize, usize);
+    fn get_tile(&self, x: i32, y: i32) -> MapTileType;
+    fn set_tile(&mut self, x : i32, y : i32, v : MapTileType);
+    fn get_size(&self) -> (i32, i32);
 }
 
-fn coords_to_index(x : usize, y : usize, width : usize) -> usize {
-    return x + y * width;
+fn coords_to_index(x : i32, y : i32, width : i32) -> usize {
+    return (x + y * width) as usize;
 }
 
 pub struct StaticMap {
     tiles : Vec<MapTileType>,
-    width : usize,
-    height : usize
+    width : i32,
+    height : i32
 }
 
 impl StaticMap {
-    pub fn new(width : usize, height : usize) -> StaticMap {
+    pub fn new(width : i32, height : i32) -> StaticMap {
         StaticMap{
             width : width,
             height : height,
-            tiles : vec![MapTileType::EMPTY; width * height]
+            tiles : vec![MapTileType::EMPTY; (width * height) as usize]
         }
     }
 }
@@ -55,11 +57,11 @@ impl rltk::BaseMap for StaticMap {
 
 impl rltk::Algorithm2D for StaticMap {
     fn point2d_to_index(&self, pt: rltk::Point) -> usize {
-        return coords_to_index(pt.x as usize, pt.y as usize, self.width);
+        return coords_to_index(pt.x, pt.y, self.width) as usize;
     }
 
     fn index_to_point2d(&self, idx: usize) -> rltk::Point {
-        rltk::Point::new(idx % self.width, idx / self.width)
+        rltk::Point::new(idx % self.width as usize, idx / self.width as usize)
     }
 
     fn dimensions(&self) -> rltk::Point {
@@ -73,15 +75,15 @@ impl rltk::Algorithm2D for StaticMap {
 }
 
 impl Map for StaticMap {
-    fn get_tile(&self, x: usize, y: usize) -> MapTileType {
+    fn get_tile(&self, x: i32, y: i32) -> MapTileType {
         return self.tiles.get(coords_to_index(x, y, self.width)).expect("accessed tile in StaticMap that is out of Bounds").clone();
     }
 
-    fn set_tile(&mut self, x : usize, y : usize, v : MapTileType) {
+    fn set_tile(&mut self, x : i32, y : i32, v : MapTileType) {
         self.tiles[coords_to_index(x, y, self.width)] = v;
     }
 
-    fn get_size(&self) -> (usize, usize) {
+    fn get_size(&self) -> (i32, i32) {
         return (self.width, self.height);
     }
 }

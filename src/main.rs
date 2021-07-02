@@ -62,8 +62,12 @@ fn try_move_player (dx: i32, dy: i32, ecs: &mut World) {
     for (pl, pos) in (&mut players, &mut positions).join() {
         let end_x = pos.x + dx;
         let end_y = pos.y + dy;
+
+        if end_x < 0 || end_x >= map.get_size().0 || end_y < 0 || end_y >= map.get_size().1 {
+            continue;
+        }
         
-        match map.get_tile(end_x as usize, end_y as usize) {
+        match map.get_tile(end_x, end_y) {
             map::MapTileType::WALL => (),
             map::MapTileType::EMPTY => {pos.x = end_x; pos.y = end_y;}            
         };

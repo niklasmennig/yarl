@@ -5,6 +5,7 @@ use specs::prelude::*;
 use crate::components;
 
 use crate::State;
+use crate::map;
 use crate::map::Map;
 use crate::map::StaticMap;
 use crate::map::map_glyph;
@@ -39,10 +40,12 @@ pub fn draw_map(state : &mut State, ctx : &mut Rltk) {
         for y in 0..map.get_size().1 {
             if visible_cells.contains(&rltk::Point{x : x as i32, y: y as i32}) {
                 let tile = map.get_tile(x, y);
-                match map_glyph(tile) {
-                    Some(g) => ctx.set(x, y, rltk::GREEN, rltk::BLACK, g),
-                    _ => ()
-                }
+                let glyph = map_glyph(tile);
+                let mut fg = rltk::GREEN;
+                if tile == map::MapTileType::EMPTY {
+                    fg = rltk::DARKGRAY;
+                } 
+                ctx.set(x, y, fg, rltk::BLACK, glyph);
             }
         }
     }

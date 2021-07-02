@@ -2,7 +2,7 @@ use rand::Rng;
 
 use crate::map::{Map, StaticMap, MapTileType};
 
-pub fn generate_random_map(width : usize, height : usize) -> StaticMap {
+pub fn generate_random_map(width : i32, height : i32) -> StaticMap {
     let mut rng = rand::thread_rng();
     let mut map = StaticMap::new(width, height);
     for y in 0..height {
